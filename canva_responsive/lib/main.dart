@@ -338,6 +338,7 @@ class _FolderArea extends StatelessWidget {
     );
   }
 }
+
 class _FolderTile extends StatelessWidget {
   const _FolderTile({required this.item});
 
@@ -417,6 +418,37 @@ class _FolderCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _FolderIcon extends StatelessWidget {
+  const _FolderIcon({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          width: 48,
+          height: 40,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        const Positioned(
+          bottom: 4,
+          right: 4,
+          child: Icon(
+            Icons.lock_outline,
+            size: 16,
+            color: Colors.white,
+          ),
+        ),
+      ],
     );
   }
 }
