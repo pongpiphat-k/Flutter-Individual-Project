@@ -62,8 +62,8 @@ class _CanvaHomeScreenState extends State<CanvaHomeScreen> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
-        final isDesktop = width >= 1200;
-        final isTablet = width >= 700 && width < 1200;
+        final isDesktop = width >= 1280;
+        final isTablet = width >= 769 && width < 1280;
         final showRail = isTablet || isDesktop;
 
         return Scaffold(
