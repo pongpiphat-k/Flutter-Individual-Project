@@ -452,35 +452,74 @@ class _FolderIcon extends StatelessWidget {
     );
   }
 }
+
+class _SideNavigationRail extends StatelessWidget {
+  const _SideNavigationRail({
+    required this.isDesktop,
+    required this.selectedIndex,
+    required this.onSelected,
+  });
+
+  final bool isDesktop;
+  final int selectedIndex;
+  final ValueChanged<int> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return NavigationRail(
+      extended: isDesktop,
+      minExtendedWidth: 200,
+      leading: Padding(
+        padding: const EdgeInsets.only(top: 24),
+        child: isDesktop
+            ? Text(
+                'Canva',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              )
+            : const Icon(Icons.blur_on),
+      ),
+      trailing: Padding(
+        padding: const EdgeInsets.only(bottom: 24),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
           children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            IconButton(onPressed: () {}, icon: const Icon(Icons.notifications_outlined)),
+            const SizedBox(height: 12),
+            CircleAvatar(
+              backgroundColor: Colors.white.withOpacity(.2),
+              child: const Icon(Icons.person, color: Colors.white),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+      selectedIndex: selectedIndex,
+      onDestinationSelected: onSelected,
+      labelType: isDesktop ? NavigationRailLabelType.none : NavigationRailLabelType.selected,
+      indicatorColor: const Color(0xFF7F4FF8),
+      destinations: const [
+        NavigationRailDestination(icon: Icon(Icons.add), label: Text('สร้าง')),
+        NavigationRailDestination(icon: Icon(Icons.folder_special_outlined), label: Text('โฟลเดอร์ของคุณ')),
+        NavigationRailDestination(icon: Icon(Icons.upload_file_outlined), label: Text('อัปโหลด')),
+        NavigationRailDestination(icon: Icon(Icons.more_horiz), label: Text('เพิ่มเติม')),
+      ],
     );
   }
+}
+
+class FolderItem {
+  final String title;
+  final int itemCount;
+  final Color thumbColor;
+
+  const FolderItem({
+    required this.title,
+    required this.itemCount,
+    this.thumbColor = const Color(0xFF5B5E69),
+  });
+}
+
+class _FilterChipData {
+  final String label;
+  final bool isActive;
+
+  _FilterChipData(this.label, this.isActive);
 }
