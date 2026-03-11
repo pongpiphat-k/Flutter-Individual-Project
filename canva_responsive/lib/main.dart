@@ -675,35 +675,24 @@ class _SideNavigationRail extends StatelessWidget {
       minExtendedWidth: 200,
       leading: Padding(
         padding: const EdgeInsets.only(top: 24),
-        child: isDesktop
-            ? Text(
+        child:
+             Text(
                 'Canva',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               )
-            : const Icon(Icons.blur_on),
       ),
-      trailing: Padding(
-        padding: const EdgeInsets.only(bottom: 24),
-        child: Column(
-          children: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.notifications_outlined)),
-            const SizedBox(height: 12),
-            CircleAvatar(
-              backgroundColor: Colors.white.withOpacity(.2),
-              child: const Icon(Icons.person, color: Colors.white),
-            ),
-          ],
-        ),
-      ),
+      
       selectedIndex: selectedIndex,
       onDestinationSelected: onSelected,
-      labelType: isDesktop ? NavigationRailLabelType.none : NavigationRailLabelType.selected,
+      labelType: isDesktop ? NavigationRailLabelType.none : NavigationRailLabelType.all,
       indicatorColor: const Color(0xFF7F4FF8),
       destinations: const [
         NavigationRailDestination(icon: Icon(Icons.add), label: Text('สร้าง')),
         NavigationRailDestination(icon: Icon(Icons.folder_special_outlined), label: Text('โฟลเดอร์ของคุณ')),
         NavigationRailDestination(icon: Icon(Icons.upload_file_outlined), label: Text('อัปโหลด')),
         NavigationRailDestination(icon: Icon(Icons.more_horiz), label: Text('เพิ่มเติม')),
+        NavigationRailDestination(icon: Icon(Icons.notifications_outlined), label: Text('การแจ้งเตือน')),
+        NavigationRailDestination(icon: Icon(Icons.person, color: Colors.white), label: Text('โปรไฟล์'))
       ],
     );
   }
