@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -205,28 +207,92 @@ class _HeaderSection extends StatelessWidget {
       ),
     );
   }
+}
+
+class _SearchBar extends StatelessWidget {
+  const _SearchBar();
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        color: const Color(0xFF10131F),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(.4),
+            blurRadius: 12,
+            offset: const Offset(0, 12),
+          ),
+        ],
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      child: Row(
+        children: [
+          Icon(Icons.search, color: Colors.white.withOpacity(.9)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              'ค้นหาในคอนเทนต์ทั้งหมด',
+              style: TextStyle(color: Colors.white.withOpacity(.7)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FilterRow extends StatelessWidget {
+  const _FilterRow({required this.isCompact});
+
+  final bool isCompact;
+
+  @override
+  Widget build(BuildContext context) {
+    final filters = [
+      _FilterChipData('โฟลเดอร์', true),
+      _FilterChipData('เจ้าของ', false),
+      _FilterChipData('วันที่แก้ไข', false),
+    ];
+
+    final spacing = isCompact ? 8.0 : 12.0;
+    final padding = isCompact ? const EdgeInsets.symmetric(horizontal: 14, vertical: 8) : const EdgeInsets.symmetric(horizontal: 18, vertical: 10);
+
+    return SizedBox(
+      height: 42,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: filters.length,
+        itemBuilder: (context, index) {
+          final chip = filters[index];
+          return AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            padding: padding,
+            decoration: BoxDecoration(
+              color: chip.isActive ? const Color(0xFF7F4FF8) : const Color(0xFF181C2C),
+              borderRadius: BorderRadius.circular(21),
+            ),
+            child: Row(
+              children: [
+                Text(
+                  chip.label,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: chip.isActive ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Icon(Icons.keyboard_arrow_down, size: 18, color: Colors.white.withOpacity(.8)),
+              ],
+            ),
+          );
+        },
+        separatorBuilder: (_, __) => SizedBox(width: spacing),
+      ),
+    );
+  }
+}
         child: Column(
           // Column is also a layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
