@@ -119,8 +119,6 @@ class _CanvaHomeScreenState extends State<CanvaHomeScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const _SearchBar(),
-                                    const SizedBox(height: 16),
                                     _FilterRow(isCompact: !isDesktop && !isTablet),
                                     const SizedBox(height: 24),
                                     Text(
@@ -164,6 +162,8 @@ class _HeaderSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final isLarge = isDesktop || width >= 700;
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: isDesktop ? 48 : 32, vertical: isDesktop ? 40 : 32),
@@ -179,30 +179,30 @@ class _HeaderSection extends StatelessWidget {
         borderRadius: BorderRadius.circular(32),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: isLarge ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CircleAvatar(
-                backgroundColor: Colors.white.withOpacity(.2),
-                child: const Icon(Icons.person, color: Colors.white),
-              ),
-              IconButton.filledTonal(
-                style: IconButton.styleFrom(backgroundColor: Colors.white.withOpacity(.2)),
-                onPressed: () {},
-                icon: const Icon(Icons.add, color: Colors.white),
-              ),
-            ],
-          ),
-          const SizedBox(height: 32),
+          SizedBox(height: isLarge ? 32 : 16),
           Text(
             'โปรเจ็กต์ทั้งหมด',
+            textAlign: isLarge ? TextAlign.center : TextAlign.start,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
+                  fontSize: isLarge ? 36 : 24,
                 ),
           ),
+          const SizedBox(height: 20),
+          if (isLarge)
+            Align(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: 700,
+                ),
+                child: const _SearchBar(),
+              ),
+            )
+          else
+            const _SearchBar(),
         ],
       ),
     );
@@ -216,17 +216,17 @@ class _SearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(14),
         color: const Color(0xFF10131F),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.4),
+            color: Colors.black,
             blurRadius: 12,
-            offset: const Offset(0, 12),
+            offset: const Offset(0, 10),
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 23),
       child: Row(
         children: [
           Icon(Icons.search, color: Colors.white.withOpacity(.9)),
