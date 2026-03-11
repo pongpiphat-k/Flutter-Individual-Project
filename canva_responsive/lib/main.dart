@@ -49,8 +49,8 @@ class _CanvaHomeScreenState extends State<CanvaHomeScreen> {
     FolderItem(title: '3', itemCount: 0),
     FolderItem(title: '2', itemCount: 0),
     FolderItem(title: '1', itemCount: 0),
-    FolderItem(title: 'Software Testing', itemCount: 1, thumbColor: Color(0xFFFFC857)),
-    FolderItem(title: 'Mobile presentation', itemCount: 1, thumbColor: Color(0xFF7FDBFF)),
+    FolderItem(title: 'Software Testing', itemCount: 1,),
+    FolderItem(title: 'Mobile presentation', itemCount: 1,),
     FolderItem(title: 'อัปโหลด', itemCount: 0, thumbColor: Color(0xFF666B7D)),
   ];
 
@@ -321,7 +321,7 @@ class _FolderArea extends StatelessWidget {
         }
 
         final width = constraints.maxWidth;
-        final crossAxisCount = math.max(1, width ~/ 350);
+        final crossAxisCount = math.max(1, width ~/ 380);
 
         return GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -359,22 +359,45 @@ class _FolderTileState extends State<_FolderTile> {
     setState(() => _hovered = hover);
   }
 
-  Widget _buildActions() {
-    final buttons = Row(
-      children: [
-        IconButton(icon: const Icon(Icons.star_border), onPressed: () {}),
-        IconButton(icon: const Icon(Icons.more_horiz), onPressed: () {}),
-      ],
+  Widget _buildActions(BuildContext context) {
+    final group = ClipRRect(
+      borderRadius: BorderRadius.circular(14),
+      child: Container(
+        color: Colors.white.withOpacity(.08),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+        child: Row(
+          children: [
+            _ActionPill(
+              icon: Icons.star_border,
+              hoverEnabled: widget.hoverActions,
+              margin: EdgeInsets.zero,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(10),
+                bottomLeft: Radius.circular(10),
+              ),
+            ),
+            _ActionPill(
+              icon: Icons.more_horiz,
+              hoverEnabled: widget.hoverActions,
+              margin: EdgeInsets.zero,
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(10),
+                bottomRight: Radius.circular(10),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
 
-    if (!widget.hoverActions) return buttons;
+    if (!widget.hoverActions) return group;
 
     return AnimatedOpacity(
       opacity: _hovered ? 1 : 0,
       duration: const Duration(milliseconds: 180),
       child: IgnorePointer(
         ignoring: !_hovered,
-        child: buttons,
+        child: group,
       ),
     );
   }
@@ -410,7 +433,7 @@ class _FolderTileState extends State<_FolderTile> {
                 ],
               ),
             ),
-            _buildActions(),
+            _buildActions(context),
           ],
         ),
       ),
@@ -436,38 +459,68 @@ class _FolderCardState extends State<_FolderCard> {
     setState(() => _hovered = hover);
   }
 
-  Widget _buildActions() {
-    final buttons = Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        IconButton(icon: const Icon(Icons.star_border), onPressed: () {}),
-        IconButton(icon: const Icon(Icons.more_horiz), onPressed: () {}),
-      ],
+  Widget _buildActions(BuildContext context) {
+    final group = ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        color: Colors.white.withOpacity(.08),
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _ActionPill(
+              icon: Icons.star_border,
+              hoverEnabled: widget.hoverActions,
+              margin: EdgeInsets.zero,
+              size: 40,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12),
+                bottomLeft: Radius.circular(12),
+              ),
+            ),
+            _ActionPill(
+              icon: Icons.more_horiz,
+              hoverEnabled: widget.hoverActions,
+              margin: EdgeInsets.zero,
+              size: 40,
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(12),
+                bottomRight: Radius.circular(12),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
 
-    if (!widget.hoverActions) return buttons;
+    if (!widget.hoverActions) return group;
 
     return AnimatedOpacity(
       opacity: _hovered ? 1 : 0,
       duration: const Duration(milliseconds: 180),
       child: IgnorePointer(
         ignoring: !_hovered,
-        child: buttons,
+        child: group,
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final showChrome = !widget.hoverActions || _hovered;
+
     return MouseRegion(
       onEnter: (_) => _handleHover(true),
       onExit: (_) => _handleHover(false),
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xFF11141F),
+          color: showChrome ? const Color(0xFF11141F) : const Color.fromARGB(0, 0, 0, 0),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white.withOpacity(.05)),
+          border: Border.all(
+            color: showChrome ? Colors.white.withOpacity(.05) : Colors.transparent,
+          ),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -513,7 +566,7 @@ class _FolderCardState extends State<_FolderCard> {
               ),
             ),
             const SizedBox(width: 12),
-            _buildActions(),
+            _buildActions(context),
           ],
         ),
       ),
@@ -531,23 +584,75 @@ class _FolderIcon extends StatelessWidget {
     return Stack(
       children: [
         Container(
-          width: 48,
-          height: 40,
+          width: 70,
+          height: 60,
           decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        const Positioned(
-          bottom: 4,
-          right: 4,
+      ],
+    );
+  }
+}
+
+class _ActionPill extends StatefulWidget {
+  const _ActionPill({
+    required this.icon,
+    required this.hoverEnabled,
+    this.margin = const EdgeInsets.only(left: 8),
+    this.size = 36,
+    this.borderRadius = const BorderRadius.all(Radius.circular(12)),
+  });
+
+  final IconData icon;
+  final bool hoverEnabled;
+  final EdgeInsets margin;
+  final double size;
+  final BorderRadiusGeometry borderRadius;
+
+  @override
+  State<_ActionPill> createState() => _ActionPillState();
+}
+
+class _ActionPillState extends State<_ActionPill> {
+  bool _hovered = false;
+
+  void _setHover(bool value) {
+    if (!widget.hoverEnabled) return;
+    setState(() => _hovered = value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isHover = widget.hoverEnabled && _hovered;
+    const hoverColor = Color(0xFF7F4FF8);
+    final hoverRadius = BorderRadius.circular(widget.size * .2);
+
+    return MouseRegion(
+      onEnter: (_) => _setHover(true),
+      onExit: (_) => _setHover(false),
+      child: GestureDetector(
+        onTap: () {},
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          margin: widget.margin,
+          width: widget.size,
+          height: widget.size,
+          decoration: BoxDecoration(
+            color: isHover ? hoverColor : const Color(0x12131A28),
+            borderRadius: isHover ? hoverRadius : widget.borderRadius,
+            border: Border.all(
+              color: isHover ? hoverColor : Colors.transparent,
+            ),
+          ),
           child: Icon(
-            Icons.lock_outline,
-            size: 16,
+            widget.icon,
+            size: widget.size * .5,
             color: Colors.white,
           ),
         ),
-      ],
+      ),
     );
   }
 }
