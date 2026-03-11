@@ -155,18 +155,55 @@ class _CanvaHomeScreenState extends State<CanvaHomeScreen> {
   }
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _HeaderSection extends StatelessWidget {
+  const _HeaderSection({required this.isDesktop});
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  final bool isDesktop;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: isDesktop ? 48 : 32, vertical: isDesktop ? 40 : 32),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF0C99C6),
+            Color(0xFF8340E9),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(32),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CircleAvatar(
+                backgroundColor: Colors.white.withOpacity(.2),
+                child: const Icon(Icons.person, color: Colors.white),
+              ),
+              IconButton.filledTonal(
+                style: IconButton.styleFrom(backgroundColor: Colors.white.withOpacity(.2)),
+                onPressed: () {},
+                icon: const Icon(Icons.add, color: Colors.white),
+              ),
+            ],
+          ),
+          const SizedBox(height: 32),
+          Text(
+            'โปรเจ็กต์ทั้งหมด',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
