@@ -288,7 +288,7 @@ class _FilterRow extends StatelessWidget {
             ),
           );
         },
-        separatorBuilder: (_, __) => SizedBox(width: spacing),
+        separatorBuilder: (_, _) => SizedBox(width: spacing),
       ),
     );
   }
@@ -314,23 +314,25 @@ class _FolderArea extends StatelessWidget {
             itemCount: folders.length,
             itemBuilder: (context, index) => _FolderTile(
               item: folders[index],
+              hoverActions: hoverActions,
             ),
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            separatorBuilder: (_, _) => const SizedBox(height: 12),
           );
         }
 
         final width = constraints.maxWidth;
-        final crossAxisCount = math.max(2, width ~/ 200);
+        final crossAxisCount = math.max(1, width ~/ 350);
 
         return GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: crossAxisCount,
-            childAspectRatio: 1.2,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
+            childAspectRatio: 4,
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 20,
           ),
           itemCount: folders.length,
           itemBuilder: (context, index) => _FolderCard(
+            hoverActions: hoverActions,
             item: folders[index],
           ),
         );
@@ -339,84 +341,181 @@ class _FolderArea extends StatelessWidget {
   }
 }
 
-class _FolderTile extends StatelessWidget {
-  const _FolderTile({required this.item});
+class _FolderTile extends StatefulWidget {
+  const _FolderTile({required this.item, required this.hoverActions});
 
   final FolderItem item;
+  final bool hoverActions;
+
+  @override
+  State<_FolderTile> createState() => _FolderTileState();
+}
+
+class _FolderTileState extends State<_FolderTile> {
+  bool _hovered = false;
+
+  void _handleHover(bool hover) {
+    if (!widget.hoverActions) return;
+    setState(() => _hovered = hover);
+  }
+
+  Widget _buildActions() {
+    final buttons = Row(
+      children: [
+        IconButton(icon: const Icon(Icons.star_border), onPressed: () {}),
+        IconButton(icon: const Icon(Icons.more_horiz), onPressed: () {}),
+      ],
+    );
+
+    if (!widget.hoverActions) return buttons;
+
+    return AnimatedOpacity(
+      opacity: _hovered ? 1 : 0,
+      duration: const Duration(milliseconds: 180),
+      child: IgnorePointer(
+        ignoring: !_hovered,
+        child: buttons,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: BoxDecoration(
-        color: const Color(0xFF11141F),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: Colors.white.withOpacity(.05)),
-      ),
-      child: Row(
-        children: [
-          _FolderIcon(color: item.thumbColor),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.title,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ),
-                Text(
-                  'ส่วนตัว · ${item.itemCount} รายการ',
-                  style: TextStyle(color: Colors.white.withOpacity(.6), fontSize: 12),
-                ),
-              ],
+    return MouseRegion(
+      onEnter: (_) => _handleHover(true),
+      onExit: (_) => _handleHover(false),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: const Color(0xFF11141F),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: Colors.white.withOpacity(.05)),
+        ),
+        child: Row(
+          children: [
+            _FolderIcon(color: widget.item.thumbColor),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.item.title,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  Text(
+                    'ส่วนตัว · ${widget.item.itemCount} รายการ',
+                    style: TextStyle(color: Colors.white.withOpacity(.6), fontSize: 12),
+                  ),
+                ],
+              ),
             ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.star_border),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.more_horiz),
-            onPressed: () {},
-          ),
-        ],
+            _buildActions(),
+          ],
+        ),
       ),
     );
   }
 }
 
-class _FolderCard extends StatelessWidget {
-  const _FolderCard({required this.item});
+class _FolderCard extends StatefulWidget {
+  const _FolderCard({required this.item, required this.hoverActions});
 
   final FolderItem item;
+  final bool hoverActions;
+
+  @override
+  State<_FolderCard> createState() => _FolderCardState();
+}
+
+class _FolderCardState extends State<_FolderCard> {
+  bool _hovered = false;
+
+  void _handleHover(bool hover) {
+    if (!widget.hoverActions) return;
+    setState(() => _hovered = hover);
+  }
+
+  Widget _buildActions() {
+    final buttons = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(icon: const Icon(Icons.star_border), onPressed: () {}),
+        IconButton(icon: const Icon(Icons.more_horiz), onPressed: () {}),
+      ],
+    );
+
+    if (!widget.hoverActions) return buttons;
+
+    return AnimatedOpacity(
+      opacity: _hovered ? 1 : 0,
+      duration: const Duration(milliseconds: 180),
+      child: IgnorePointer(
+        ignoring: !_hovered,
+        child: buttons,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF11141F),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(.05)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _FolderIcon(color: item.thumbColor),
-          const Spacer(),
-          Text(item.title, style: const TextStyle(fontWeight: FontWeight.w600)),
-          Text(
-            '${item.itemCount} รายการ',
-            style: TextStyle(color: Colors.white.withOpacity(.6), fontSize: 12),
-          ),
-          Row(
-            children: [
-              IconButton(icon: const Icon(Icons.star_border), onPressed: () {}),
-              IconButton(icon: const Icon(Icons.more_horiz), onPressed: () {}),
-            ],
-          ),
-        ],
+    return MouseRegion(
+      onEnter: (_) => _handleHover(true),
+      onExit: (_) => _handleHover(false),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF11141F),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white.withOpacity(.05)),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _FolderIcon(color: widget.item.thumbColor),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(widget.item.title, style: const TextStyle(fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF191C28),
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.lock_outline, size: 14, color: Colors.white),
+                            const SizedBox(width: 4),
+                            Text(
+                              'ส่วนตัว',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white.withOpacity(.8),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '${widget.item.itemCount} รายการ',
+                        style: TextStyle(color: Colors.white.withOpacity(.6), fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            _buildActions(),
+          ],
+        ),
       ),
     );
   }
