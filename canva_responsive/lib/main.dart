@@ -338,6 +338,88 @@ class _FolderArea extends StatelessWidget {
     );
   }
 }
+class _FolderTile extends StatelessWidget {
+  const _FolderTile({required this.item});
+
+  final FolderItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: const Color(0xFF11141F),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: Colors.white.withOpacity(.05)),
+      ),
+      child: Row(
+        children: [
+          _FolderIcon(color: item.thumbColor),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.title,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+                Text(
+                  'ส่วนตัว · ${item.itemCount} รายการ',
+                  style: TextStyle(color: Colors.white.withOpacity(.6), fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.star_border),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.more_horiz),
+            onPressed: () {},
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FolderCard extends StatelessWidget {
+  const _FolderCard({required this.item});
+
+  final FolderItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF11141F),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white.withOpacity(.05)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _FolderIcon(color: item.thumbColor),
+          const Spacer(),
+          Text(item.title, style: const TextStyle(fontWeight: FontWeight.w600)),
+          Text(
+            '${item.itemCount} รายการ',
+            style: TextStyle(color: Colors.white.withOpacity(.6), fontSize: 12),
+          ),
+          Row(
+            children: [
+              IconButton(icon: const Icon(Icons.star_border), onPressed: () {}),
+              IconButton(icon: const Icon(Icons.more_horiz), onPressed: () {}),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
         child: Column(
           // Column is also a layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
