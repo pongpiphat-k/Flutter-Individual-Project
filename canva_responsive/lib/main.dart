@@ -293,6 +293,51 @@ class _FilterRow extends StatelessWidget {
     );
   }
 }
+
+class _FolderArea extends StatelessWidget {
+  const _FolderArea({
+    required this.folders,
+    required this.useGrid,
+    required this.hoverActions,
+  });
+
+  final List<FolderItem> folders;
+  final bool useGrid;
+  final bool hoverActions;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (!useGrid) {
+          return ListView.separated(
+            itemCount: folders.length,
+            itemBuilder: (context, index) => _FolderTile(
+              item: folders[index],
+            ),
+            separatorBuilder: (_, __) => const SizedBox(height: 12),
+          );
+        }
+
+        final width = constraints.maxWidth;
+        final crossAxisCount = math.max(2, width ~/ 200);
+
+        return GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            childAspectRatio: 1.2,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+          ),
+          itemCount: folders.length,
+          itemBuilder: (context, index) => _FolderCard(
+            item: folders[index],
+          ),
+        );
+      },
+    );
+  }
+}
         child: Column(
           // Column is also a layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
