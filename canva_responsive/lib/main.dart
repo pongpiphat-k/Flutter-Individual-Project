@@ -53,7 +53,17 @@ class _CanvaHomeScreenState extends State<CanvaHomeScreen> {
   ];
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  Widget build(BuildContext context) {
+    final media = MediaQuery.of(context);
+    final isLandscape = media.orientation == Orientation.landscape;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        final isDesktop = width >= 1200;
+        final isTablet = width >= 700 && width < 1200;
+        final showRail = isTablet || isDesktop;
+
 }
 
 class _MyHomePageState extends State<MyHomePage> {
