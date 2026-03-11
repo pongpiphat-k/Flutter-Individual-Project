@@ -64,6 +64,95 @@ class _CanvaHomeScreenState extends State<CanvaHomeScreen> {
         final isTablet = width >= 700 && width < 1200;
         final showRail = isTablet || isDesktop;
 
+        return Scaffold(
+          backgroundColor: const Color(0xFF05060A),
+          extendBody: true,
+          bottomNavigationBar: !showRail
+              ? NavigationBar(
+                  height: 72,
+                  selectedIndex: _selectedDestination,
+                  labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+                  destinations: _destinations,
+                  onDestinationSelected: (index) {
+                    setState(() => _selectedDestination = index);
+                  },
+                )
+              : null,
+          body: SafeArea(
+            child: Row(
+              children: [
+                if (showRail)
+                  _SideNavigationRail(
+                    isDesktop: isDesktop,
+                    selectedIndex: _selectedDestination,
+                    onSelected: (index) => setState(() => _selectedDestination = index),
+                  ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: isDesktop ? 48 : 24, vertical: 24),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(32),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Color(0xFF0D1F3D),
+                              Color(0xFF080A16),
+                            ],
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            _HeaderSection(isDesktop: isDesktop),
+                            Expanded(
+                              child: Container(
+                                width: double.infinity,
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFF0B0D14),
+                                  borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+                                ),
+                                padding: EdgeInsets.symmetric(horizontal: isDesktop ? 40 : 24, vertical: 24),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const _SearchBar(),
+                                    const SizedBox(height: 16),
+                                    _FilterRow(isCompact: !isDesktop && !isTablet),
+                                    const SizedBox(height: 24),
+                                    Text(
+                                      'โฟลเดอร์',
+                                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.white,
+                                          ),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Expanded(
+                                      child: _FolderArea(
+                                        folders: _folders,
+                                        useGrid: isTablet || isDesktop || isLandscape,
+                                        hoverActions: isDesktop,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
 
 class _MyHomePageState extends State<MyHomePage> {
