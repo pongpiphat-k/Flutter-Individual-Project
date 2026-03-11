@@ -26,19 +26,31 @@ class CanvaResponsiveApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class CanvaHomeScreen extends StatefulWidget {
+  const CanvaHomeScreen({super.key});
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
+  @override
+  State<CanvaHomeScreen> createState() => _CanvaHomeScreenState();
+}
 
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+class _CanvaHomeScreenState extends State<CanvaHomeScreen> {
+  int _selectedDestination = 0;
 
-  final String title;
+  final _destinations = const [
+    NavigationDestination(icon: Icon(Icons.add), label: 'สร้าง'),
+    NavigationDestination(icon: Icon(Icons.folder_special_outlined), label: 'โฟลเดอร์ของคุณ'),
+    NavigationDestination(icon: Icon(Icons.upload_file_outlined), label: 'อัปโหลด'),
+    NavigationDestination(icon: Icon(Icons.more_horiz), label: 'เพิ่มเติม'),
+  ];
+
+  final List<FolderItem> _folders = const [
+    FolderItem(title: '3', itemCount: 0),
+    FolderItem(title: '2', itemCount: 0),
+    FolderItem(title: '1', itemCount: 0),
+    FolderItem(title: 'Software Testing', itemCount: 1, thumbColor: Color(0xFFFFC857)),
+    FolderItem(title: 'Mobile presentation', itemCount: 1, thumbColor: Color(0xFF7FDBFF)),
+    FolderItem(title: 'อัปโหลด', itemCount: 0, thumbColor: Color(0xFF666B7D)),
+  ];
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
