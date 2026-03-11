@@ -163,7 +163,7 @@ class _HeaderSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final isLarge = isDesktop || width >= 700;
+    final isLarge = isDesktop || width >= 769;
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: isDesktop ? 48 : 32, vertical: isDesktop ? 40 : 32),
